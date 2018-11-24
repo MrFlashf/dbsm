@@ -30,60 +30,57 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
   }
 
   body() {
-    if (_loading) {
-      return [
-        Center(child: CircularProgressIndicator())
-      ];
-    } else {
-      return [
-        TextField(
-          textAlign: TextAlign.center,
-          obscureText: true,
-          onChanged: (String password) {changePassword(password);},
-          decoration: InputDecoration(
-            hintText: 'Wpisz hasło',
-          ),
+    return [
+      TextField(
+        textAlign: TextAlign.center,
+        obscureText: true,
+        onChanged: (String password) {changePassword(password);},
+        decoration: InputDecoration(
+          hintText: 'Wpisz hasło',
         ),
-        RaisedButton(
-          color: Theme.of(context).primaryColor,
-          textColor: Colors.white,
-          child: Text('Zapisz hasło'),
-          onPressed: _savePassword
-        )
-      ];
-    }
-
+      ),
+      RaisedButton(
+        color: Theme.of(context).primaryColor,
+        textColor: Colors.white,
+        child: Text('Zapisz hasło'),
+        onPressed: _savePassword
+      )
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Zarejestruj hasło')
-      ),
       body: Container(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: body()
-          // <Widget>[
-          //   CircularProgressIndicator(),
-          //   TextField(
-          //     textAlign: TextAlign.center,
-          //     obscureText: true,
-          //     onChanged: (String password) {changePassword(password);},
-          //     decoration: InputDecoration(
-          //       hintText: 'Wpisz hasło',
-          //     ),
-          //   ),
-          //   RaisedButton(
-          //     color: Theme.of(context).primaryColor,
-          //     textColor: Colors.white,
-          //     child: Text('Zapisz hasło'),
-          //     onPressed: _savePassword
-          //   )
-          // ]
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(50.0),
+              child: Text(
+                'Zarejestruj hasło',
+                style: TextStyle(
+                  fontSize: 26.0
+                ),
+              ),
+            ),
+            TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
+              onChanged: (String password) {changePassword(password);},
+              decoration: InputDecoration(
+                hintText: 'Wpisz hasło',
+              ),
+            ),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              child: Text('Zapisz hasło'),
+              onPressed: _savePassword
+            )
+          ]
         )
       )
     );

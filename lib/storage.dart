@@ -116,6 +116,7 @@ class NotesStorage {
   void deleteNote() async {
     final file = await _noteFile;
     final saltFile = await _noteSaltFile;
+    
 
     file.delete();
     saltFile.delete();

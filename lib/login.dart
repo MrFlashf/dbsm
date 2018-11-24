@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 import 'storage.dart';
 import 'note.dart';
+
 
 class LoginScreen extends StatefulWidget {
   final PasswordStorage storage;
@@ -14,6 +16,26 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   String _password;
   String _error;
+
+  @override
+  void initState() {
+    super.initState();
+    fingerPrint();
+  }
+
+  void fingerPrint() async {
+    var localAuth = new LocalAuthentication();
+    var canCheckBiometrics =
+      await localAuth.canCheckBiometrics;
+
+
+    if (canCheckBiometrics) {
+      var didAuthenticate = await localAuth.authenticateWithBiometrics(
+        localizedReason: 'Dawaj palucha'
+      );
+    }
+    print(canCheckBiometrics);
+  }
 
   _changePassword(String password) {
     _password = password;
@@ -73,15 +95,21 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Zaloguj się')
-      ),
       body: Container(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(50.0),
+              child: Text(
+                'Zaloguj się',
+                style: TextStyle(
+                  fontSize: 26.0
+                )
+              )
+            ),
             TextField(
               textAlign: TextAlign.center,
               obscureText: true,
