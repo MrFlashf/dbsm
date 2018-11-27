@@ -51,32 +51,33 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         title: Text('Wpisz hasło')
       ),
       body: Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextField(
-                textAlign: TextAlign.center,
-                obscureText: true,
-                onChanged: (String password) {setOldPassword(password);},
-                decoration: InputDecoration(
-                  hintText: 'Wpisz stare hasło',
-                ),
+        padding: EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
+              onChanged: (String password) {setOldPassword(password);},
+              decoration: InputDecoration(
+                hintText: 'Wpisz stare hasło',
               ),
-              TextField(
-                textAlign: TextAlign.center,
-                obscureText: true,
-                onChanged: (String password) {setNewPassword(password);},
-                decoration: InputDecoration(
-                  hintText: 'Wpisz nowe hasło',
-                ),
+            ),
+            TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
+              onChanged: (String password) {setNewPassword(password);},
+              decoration: InputDecoration(
+                hintText: 'Wpisz nowe hasło',
               ),
-              RaisedButton(
-                child: Text('Zapisz hasło'),
-                onPressed: _changePassword
-              )
-            ]
-          )
+            ),
+            RaisedButton(
+              color: Colors.green,
+              textColor: Colors.white,
+              child: Text('Zapisz hasło'),
+              onPressed: _changePassword
+            )
+          ]
         )
       )
     );

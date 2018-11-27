@@ -63,6 +63,41 @@ class PasswordStorage {
   }
 }
 
+class NotEncryptedNotesStorage {
+   Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _noteFile async {
+    final path = await _localPath;
+    return File('$path/note.txt');
+  }
+
+  void saveNote(String note, String password) async {
+    final file = await _noteFile;
+    file.writeAsString('$note');
+  }
+
+  Future<String> getNote(String password) async {
+    try {
+      final file = await _noteFile;
+      String note = await file.readAsString();
+
+      return note;
+    } catch(e) {
+      return "Brak notatek";
+    }
+  }
+
+  void deleteNote() async {
+    final file = await _noteFile;
+
+    file.delete();
+  }
+}
+
 class NotesStorage {
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();

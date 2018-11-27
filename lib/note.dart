@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'storage.dart';
 import 'changePassword.dart';
+import 'settings.dart';
 
 class NoteScreen extends StatefulWidget {
-  final NotesStorage storage;
+  final NotEncryptedNotesStorage storage;
   final String password;
 
   NoteScreen({Key key, this.storage, this.password}) : super(key: key);
@@ -92,6 +93,10 @@ class _NoteScreenState extends State<NoteScreen> {
             ListTile(
               title: Text('Ustawienia'),
               trailing: Icon(Icons.settings),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new SettingsPage()));
+              },
             ),
             Divider(),
             ListTile(
