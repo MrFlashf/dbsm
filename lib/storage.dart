@@ -2,65 +2,61 @@ import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:password/password.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class PasswordStorage {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _passwordFile async {
-    final path = await _localPath;
-    return File('$path/tu_nie_ma_hasla.txt');
-  }
+  final storage = new FlutterSecureStorage();
 
   void savePassword(String password) async {
-    final file = await _passwordFile;
     String hash = Password.hash(password, PBKDF2());
-    file.writeAsString('$hash');
+
+    await storage.write(key: 'password', value: hash);
   }
 
   Future<bool> checkIfPasswordExists() async {
-    try {
-      final file = await _passwordFile;
-      String passwordHash = await file.readAsString();
-      return passwordHash.length > 0;
-    } catch(e) {
-      return false;
-    }
+    var password = await storage.read(key: 'password');
+    print(password);
   }
 
   void resetPassword() async {
-    final passwordFile = await _passwordFile;
-    passwordFile.deleteSync();
+    storage.delete(key: 'password');
   }
 
   Future<bool> checkPassword(String password) async {
-    try {
-      final passFile = await _passwordFile;
-      String hash = await passFile.readAsString();
+    String hash = await storage.read(key: 'password');
 
-      return Password.verify(password, hash);
-    } catch(e) {
-      return false;
-    }
+    return Password.verify(password, hash);
   } 
 
   Future<bool> changePassword(String oldPassword, String newPassword) async {
-    try {
-      var passwordCorrect = await checkPassword(oldPassword);
-      if (!passwordCorrect) {
-        return false;
-      }
+    var isPasswordCorrect = await checkPassword(oldPassword);
 
-      savePassword(newPassword);
-      return true;
-
-    } catch(e) {
+    if (!isPasswordCorrect) {
       return false;
     }
+
+    savePassword(newPassword);
+    return true;
   }
+}
+
+class NotesStorage {
+  final storage = new FlutterSecureStorage();
+
+  void saveNote(String note, String password) async {
+    storage.write(key: 'note', value: note);
+  }
+
+  Future<String> getNote(String password) async {
+    String note = await storage.read(key: 'note');
+
+    return note;
+  }
+
+  void deleteNote() async {
+    storage.delete(key: 'note');
+  }
+
 }
 
 class NotEncryptedNotesStorage {
