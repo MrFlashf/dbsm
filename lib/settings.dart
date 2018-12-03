@@ -13,7 +13,12 @@ class _SettingsState extends State<SettingsPage> {
 
   void initState() {
     super.initState();
-    SettingsStorage().isFingerprintSet().then((bool value) {
+    initFingerprint();
+  }
+
+  void initFingerprint() async {
+    bool value = await SettingsStorage().isFingerprintSet();
+    setState(() {
       _isChecked = value;
     });
   }
