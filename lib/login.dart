@@ -24,18 +24,19 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void fingerPrint() async {
+    bool fingerprintEnabled = await SettingsStorage().isFingerprintSet();
     var localAuth = new LocalAuthentication();
     var canCheckBiometrics =
       await localAuth.canCheckBiometrics;
 
 
-    if (canCheckBiometrics) {
+    if (fingerprintEnabled && canCheckBiometrics) {
       var didAuthenticate = await localAuth.authenticateWithBiometrics(
         localizedReason: 'Dawaj palucha'
       );
       if (didAuthenticate) {
       var route = MaterialPageRoute(
-        builder: (BuildContext context) => NoteScreen(storage: NotEncryptedNotesStorage(), password: _password)
+        builder: (BuildContext context) => NoteScreen(storage: NotesStorage(), password: _password)
       );
       Navigator.of(context).pushReplacement(route);
       }
@@ -51,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       .then((bool value) {
         if (value) {
           var route = MaterialPageRoute(
-            builder: (BuildContext context) => NoteScreen(storage: NotEncryptedNotesStorage(), password: _password)
+            builder: (BuildContext context) => NoteScreen(storage: NotesStorage(), password: _password)
           );
           Navigator.of(context).pushReplacement(route);
         } else {
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _resetPassword() async {
     widget.storage.resetPassword();
-    NotEncryptedNotesStorage().deleteNote();
+    NotesStorage().deleteNote();
     Navigator.pushReplacementNamed(context, '/setPassword');
   }
 

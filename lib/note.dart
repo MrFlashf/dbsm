@@ -4,7 +4,7 @@ import 'changePassword.dart';
 import 'settings.dart';
 
 class NoteScreen extends StatefulWidget {
-  final NotEncryptedNotesStorage storage;
+  final NotesStorage storage;
   final String password;
 
   NoteScreen({Key key, this.storage, this.password}) : super(key: key);
@@ -17,10 +17,8 @@ class _NoteScreenState extends State<NoteScreen> {
   String _note = '';
 
   void initState() {
-    String password = widget.password;
-
     super.initState();
-    widget.storage.getNote(password).then((String note) {
+    widget.storage.getNote().then((String note) {
       setState(() {
         _note = note;
       });
@@ -32,8 +30,7 @@ class _NoteScreenState extends State<NoteScreen> {
   }
 
   _saveNote() {
-    String password = widget.password;
-    widget.storage.saveNote(_note, password);
+    widget.storage.saveNote(_note);
     setState(() {
       showDialog(context: context, builder: (BuildContext context) {
         return AlertDialog(

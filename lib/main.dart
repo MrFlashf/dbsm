@@ -8,6 +8,8 @@ import 'changePassword.dart';
 void main() {
   runApp(
     MaterialApp(
+      color: Colors.green,
+      theme: ThemeData.light(),
       title: 'Tajna wiadomość',
       home: InitializeApp(storage: PasswordStorage()),
       routes: <String, WidgetBuilder> {

@@ -13,20 +13,16 @@ class SetPasswordScreen extends StatefulWidget {
 
 class _SetPasswordScreenState extends State<SetPasswordScreen> {
   String _password;
-  bool _loading = false;
 
   changePassword(String password) {
     _password = password;
   }
 
   void _savePassword() async {
-    _loading = true;
     setState(() {
-      _loading = true;
       widget.storage.savePassword(_password);
       Navigator.pushReplacementNamed(context, '/login');
     });
-    // _loading = false;
   }
 
   body() {

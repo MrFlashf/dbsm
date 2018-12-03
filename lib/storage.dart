@@ -1,6 +1,3 @@
-import 'package:flutter_string_encryption/flutter_string_encryption.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 import 'package:password/password.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -15,7 +12,7 @@ class PasswordStorage {
 
   Future<bool> checkIfPasswordExists() async {
     var password = await storage.read(key: 'password');
-    print(password);
+    return password != null;
   }
 
   void resetPassword() async {
@@ -43,11 +40,11 @@ class PasswordStorage {
 class NotesStorage {
   final storage = new FlutterSecureStorage();
 
-  void saveNote(String note, String password) async {
+  void saveNote(String note) async {
     storage.write(key: 'note', value: note);
   }
 
-  Future<String> getNote(String password) async {
+  Future<String> getNote() async {
     String note = await storage.read(key: 'note');
 
     return note;
@@ -56,100 +53,18 @@ class NotesStorage {
   void deleteNote() async {
     storage.delete(key: 'note');
   }
-
 }
 
-class NotEncryptedNotesStorage {
-   Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
+class SettingsStorage {
+  final storage = new FlutterSecureStorage();
 
-    return directory.path;
+  void saveFingerprintOption(bool value) {
+    storage.write(key: 'fingerprint', value: '$value');
   }
 
-  Future<File> get _noteFile async {
-    final path = await _localPath;
-    return File('$path/note.txt');
-  }
+  Future<bool> isFingerprintSet() async {
+    String fingerprint = await storage.read(key: 'fingerprint');
 
-  void saveNote(String note, String password) async {
-    final file = await _noteFile;
-    file.writeAsString('$note');
-  }
-
-  Future<String> getNote(String password) async {
-    try {
-      final file = await _noteFile;
-      String note = await file.readAsString();
-
-      return note;
-    } catch(e) {
-      return "Brak notatek";
-    }
-  }
-
-  void deleteNote() async {
-    final file = await _noteFile;
-
-    file.delete();
-  }
-}
-
-class NotesStorage {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _noteFile async {
-    final path = await _localPath;
-    return File('$path/note.txt');
-  }
-
-  Future<File> get _noteSaltFile async {
-    final path = await _localPath;
-    return File('$path/noteSugar.txt');
-  }
-
-  void saveNote(String note, String password) async {
-    final file = await _noteFile;
-    final saltFile = await _noteSaltFile;
-    final cryptor = new PlatformStringCryptor();
-
-    final String salt = await cryptor.generateSalt();
-    final String key = await cryptor.generateKeyFromPassword(password, salt);
-
-    final String encrypted = await cryptor.encrypt(note, key);
-
-    saltFile.writeAsStringSync(salt);
-    file.writeAsString('$encrypted');
-  }
-
-  Future<String> getNote(String password) async {
-    try {
-      final file = await _noteFile;
-      final saltFile = await _noteSaltFile;
-      final cryptor = new PlatformStringCryptor();
-
-      String salt = await saltFile.readAsString();
-      String encrypted = await file.readAsString();
-
-      String key = await cryptor.generateKeyFromPassword(password, salt);
-
-      String idk = await cryptor.decrypt(encrypted, key);
-
-      return idk;
-    } catch(e) {
-      return "Brak notatek";
-    }
-  }
-
-  void deleteNote() async {
-    final file = await _noteFile;
-    final saltFile = await _noteSaltFile;
-    
-
-    file.delete();
-    saltFile.delete();
+    return fingerprint == "true";
   }
 }
